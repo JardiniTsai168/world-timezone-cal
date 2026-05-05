@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 import '../widgets/city_time_card.dart';
+import '../widgets/city_picker_dialog.dart';
 import '../widgets/empty_state.dart';
 
 class CurrentTimeScreen extends StatefulWidget {
@@ -15,12 +16,13 @@ class CurrentTimeScreen extends StatefulWidget {
 class _CurrentTimeScreenState extends State<CurrentTimeScreen> {
   Timer? _timer;
   int _tick = 0;
+  bool _isEditMode = false;
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() => _tick++);
+      if (mounted) setState(() => _tick++);
     });
   }
 
@@ -32,52 +34,18 @@ class _CurrentTimeScreenState extends State<CurrentTimeScreen> {
 
   void _showAddCityDialog(BuildContext context) {
     final appState = context.read<AppState>();
-    final available = appState.allCities
-        .where((c) => !appState.selectedCities.any((s) => s.id == c.id))
-        .toList();
-
-    if (available.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All cities already added')),
-      );
-      return;
-    }
-
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                'Add City',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: ListView.builder(
-                itemCount: available.length,
-                itemBuilder: (_, i) {
-                  final city = available[i];
-                  return ListTile(
-                    leading: Text(city.flagEmoji, style: const TextStyle(fontSize: 24)),
-                    title: Text(city.name),
-                    subtitle: Text(city.timeZoneName),
-                    onTap: () {
-                      appState.addCity(city);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+      builder: (ctx) => CityPickerDialog(
+        allCities: appState.allCities.toList(),
+        excludedCities: appState.selectedCities.toList(),
+        onSelected: appState.addCity,
       ),
     );
+  }
+
+  void _toggleEditMode() {
+    setState(() => _isEditMode = !_isEditMode);
   }
 
   @override
@@ -89,9 +57,9 @@ class _CurrentTimeScreenState extends State<CurrentTimeScreen> {
           Consumer<AppState>(
             builder: (context, appState, child) {
               if (appState.selectedCities.isEmpty) return const SizedBox.shrink();
-              return IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => _showAddCityDialog(context),
+              return TextButton(
+                onPressed: _toggleEditMode,
+                child: Text(_isEditMode ? 'Done' : 'Edit'),
               );
             },
           ),
@@ -111,18 +79,22 @@ class _CurrentTimeScreenState extends State<CurrentTimeScreen> {
             );
           }
 
-          return ListView.builder(
+          return ReorderableListView.builder(
             padding: const EdgeInsets.only(top: 8, bottom: 80),
             itemCount: cities.length,
+            buildDefaultDragHandles: _isEditMode,
+            onReorder: (oldIndex, newIndex) {
+              context.read<AppState>().reorderCities(oldIndex, newIndex);
+            },
             itemBuilder: (_, i) {
               final city = cities[i];
-                    return CityTimeCard(
-                      key: ValueKey(city.id),
-                      city: city,
-                      is24Hour: appState.is24HourFormat,
-                      showLiveIndicator: true,
-                      onDelete: () => appState.removeCity(city),
-                    );
+              return CityTimeCard(
+                key: ValueKey(city.id),
+                city: city,
+                is24Hour: appState.is24HourFormat,
+                showLiveIndicator: true,
+                onDelete: _isEditMode ? () => appState.removeCity(city) : null,
+              );
             },
           );
         },

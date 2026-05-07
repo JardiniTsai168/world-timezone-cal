@@ -191,12 +191,12 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                         );
                       }
 
-                      final isLastCityBeforeAdd = inEditWithAdd && i == cityCount - 1;
+                      final isLastItem = i == cityCount - 1;
                       final city = cities[i];
                       return Container(
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: isLastCityBeforeAdd
+                            bottom: isLastItem
                                 ? BorderSide.none
                                 : const BorderSide(color: Color(0xFFE5E7EB), width: 1),
                           ),

@@ -80,28 +80,78 @@ class City {
 
   static List<City> getPredefinedCities() {
     return [
+      // === TOP 3 MEGA MARKETS ===
       City(id: 'taipei', name: 'Taipei', countryCode: 'TW', country: 'Taiwan', timeZoneName: 'Asia/Taipei', flagEmoji: '🇹🇼'),
       City(id: 'tokyo', name: 'Tokyo', countryCode: 'JP', country: 'Japan', timeZoneName: 'Asia/Tokyo', flagEmoji: '🇯🇵'),
-      City(id: 'seoul', name: 'Seoul', countryCode: 'KR', country: 'South Korea', timeZoneName: 'Asia/Seoul', flagEmoji: '🇰🇷'),
-      City(id: 'beijing', name: 'Beijing', countryCode: 'CN', country: 'China', timeZoneName: 'Asia/Shanghai', flagEmoji: '🇨🇳'),
-      City(id: 'singapore', name: 'Singapore', countryCode: 'SG', country: 'Singapore', timeZoneName: 'Asia/Singapore', flagEmoji: '🇸🇬'),
-      City(id: 'sydney', name: 'Sydney', countryCode: 'AU', country: 'Australia', timeZoneName: 'Australia/Sydney', flagEmoji: '🇦🇺'),
-      City(id: 'london', name: 'London', countryCode: 'GB', country: 'United Kingdom', timeZoneName: 'Europe/London', flagEmoji: '🇬🇧'),
-      City(id: 'paris', name: 'Paris', countryCode: 'FR', country: 'France', timeZoneName: 'Europe/Paris', flagEmoji: '🇫🇷'),
-      City(id: 'berlin', name: 'Berlin', countryCode: 'DE', country: 'Germany', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
-      City(id: 'rome', name: 'Rome', countryCode: 'IT', country: 'Italy', timeZoneName: 'Europe/Rome', flagEmoji: '🇮🇹'),
-      City(id: 'moscow', name: 'Moscow', countryCode: 'RU', country: 'Russia', timeZoneName: 'Europe/Moscow', flagEmoji: '🇷🇺'),
+      City(id: 'osaka', name: 'Osaka', countryCode: 'JP', country: 'Japan', timeZoneName: 'Asia/Tokyo', flagEmoji: '🇯🇵'),
+      City(id: 'washington_dc', name: 'Washington D.C.', countryCode: 'US', country: 'United States', timeZoneName: 'America/New_York', flagEmoji: '🇺🇸'),
       City(id: 'new_york', name: 'New York', countryCode: 'US', country: 'United States', timeZoneName: 'America/New_York', flagEmoji: '🇺🇸'),
       City(id: 'los_angeles', name: 'Los Angeles', countryCode: 'US', country: 'United States', timeZoneName: 'America/Los_Angeles', flagEmoji: '🇺🇸'),
       City(id: 'chicago', name: 'Chicago', countryCode: 'US', country: 'United States', timeZoneName: 'America/Chicago', flagEmoji: '🇺🇸'),
-      City(id: 'dubai', name: 'Dubai', countryCode: 'AE', country: 'United Arab Emirates', timeZoneName: 'Asia/Dubai', flagEmoji: '🇦🇪'),
+      City(id: 'san_francisco', name: 'San Francisco', countryCode: 'US', country: 'United States', timeZoneName: 'America/Los_Angeles', flagEmoji: '🇺🇸'),
+      City(id: 'shanghai', name: 'Shanghai', countryCode: 'CN', country: 'China', timeZoneName: 'Asia/Shanghai', flagEmoji: '🇨🇳'),
+      City(id: 'beijing', name: 'Beijing', countryCode: 'CN', country: 'China', timeZoneName: 'Asia/Shanghai', flagEmoji: '🇨🇳'),
+      
+      // === MAJOR EUROPEAN MARKETS ===
+      City(id: 'london', name: 'London', countryCode: 'GB', country: 'United Kingdom', timeZoneName: 'Europe/London', flagEmoji: '🇬🇧'),
+      City(id: 'berlin', name: 'Berlin', countryCode: 'DE', country: 'Germany', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
+      City(id: 'munich', name: 'Munich', countryCode: 'DE', country: 'Germany', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
+      City(id: 'frankfurt', name: 'Frankfurt', countryCode: 'DE', country: 'Germany', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
+      City(id: 'paris', name: 'Paris', countryCode: 'FR', country: 'France', timeZoneName: 'Europe/Paris', flagEmoji: '🇫🇷'),
+      City(id: 'rome', name: 'Rome', countryCode: 'IT', country: 'Italy', timeZoneName: 'Europe/Rome', flagEmoji: '🇮🇹'),
+      City(id: 'milan', name: 'Milan', countryCode: 'IT', country: 'Italy', timeZoneName: 'Europe/Rome', flagEmoji: '🇮🇹'),
+      City(id: 'madrid', name: 'Madrid', countryCode: 'ES', country: 'Spain', timeZoneName: 'Europe/Madrid', flagEmoji: '🇪🇸'),
+      City(id: 'barcelona', name: 'Barcelona', countryCode: 'ES', country: 'Spain', timeZoneName: 'Europe/Madrid', flagEmoji: '🇪🇸'),
+      
+      // === NORTH AMERICA ===
+      City(id: 'toronto', name: 'Toronto', countryCode: 'CA', country: 'Canada', timeZoneName: 'America/Toronto', flagEmoji: '🇨🇦'),
+      City(id: 'montreal', name: 'Montreal', countryCode: 'CA', country: 'Canada', timeZoneName: 'America/Toronto', flagEmoji: '🇨🇦'),
+      City(id: 'vancouver', name: 'Vancouver', countryCode: 'CA', country: 'Canada', timeZoneName: 'America/Vancouver', flagEmoji: '🇨🇦'),
+      
+      // === ASIA-PACIFIC ===
+      City(id: 'seoul', name: 'Seoul', countryCode: 'KR', country: 'South Korea', timeZoneName: 'Asia/Seoul', flagEmoji: '🇰🇷'),
+      City(id: 'new_delhi', name: 'New Delhi', countryCode: 'IN', country: 'India', timeZoneName: 'Asia/Kolkata', flagEmoji: '🇮🇳'),
       City(id: 'mumbai', name: 'Mumbai', countryCode: 'IN', country: 'India', timeZoneName: 'Asia/Kolkata', flagEmoji: '🇮🇳'),
+      City(id: 'bangalore', name: 'Bangalore', countryCode: 'IN', country: 'India', timeZoneName: 'Asia/Kolkata', flagEmoji: '🇮🇳'),
+      City(id: 'sydney', name: 'Sydney', countryCode: 'AU', country: 'Australia', timeZoneName: 'Australia/Sydney', flagEmoji: '🇦🇺'),
+      City(id: 'melbourne', name: 'Melbourne', countryCode: 'AU', country: 'Australia', timeZoneName: 'Australia/Melbourne', flagEmoji: '🇦🇺'),
+      
+      // === HIGH PENETRATION EUROPE ===
+      City(id: 'amsterdam', name: 'Amsterdam', countryCode: 'NL', country: 'Netherlands', timeZoneName: 'Europe/Amsterdam', flagEmoji: '🇳🇱'),
+      City(id: 'stockholm', name: 'Stockholm', countryCode: 'SE', country: 'Sweden', timeZoneName: 'Europe/Stockholm', flagEmoji: '🇸🇪'),
+      City(id: 'reykjavik', name: 'Reykjavík', countryCode: 'IS', country: 'Iceland', timeZoneName: 'Atlantic/Reykjavik', flagEmoji: '🇮🇸'),
+      City(id: 'zurich', name: 'Zürich', countryCode: 'CH', country: 'Switzerland', timeZoneName: 'Europe/Zurich', flagEmoji: '🇨🇭'),
+      City(id: 'oslo', name: 'Oslo', countryCode: 'NO', country: 'Norway', timeZoneName: 'Europe/Oslo', flagEmoji: '🇳🇴'),
+      City(id: 'copenhagen', name: 'Copenhagen', countryCode: 'DK', country: 'Denmark', timeZoneName: 'Europe/Copenhagen', flagEmoji: '🇩🇰'),
+      
+      // === MIDDLE EAST ===
+      City(id: 'riyadh', name: 'Riyadh', countryCode: 'SA', country: 'Saudi Arabia', timeZoneName: 'Asia/Riyadh', flagEmoji: '🇸🇦'),
+      City(id: 'dubai', name: 'Dubai', countryCode: 'AE', country: 'United Arab Emirates', timeZoneName: 'Asia/Dubai', flagEmoji: '🇦🇪'),
+      
+      // === ASIA HIGH PENETRATION ===
       City(id: 'hong_kong', name: 'Hong Kong', countryCode: 'HK', country: 'Hong Kong', timeZoneName: 'Asia/Hong_Kong', flagEmoji: '🇭🇰'),
+      City(id: 'singapore', name: 'Singapore', countryCode: 'SG', country: 'Singapore', timeZoneName: 'Asia/Singapore', flagEmoji: '🇸🇬'),
       City(id: 'bangkok', name: 'Bangkok', countryCode: 'TH', country: 'Thailand', timeZoneName: 'Asia/Bangkok', flagEmoji: '🇹🇭'),
+      City(id: 'phnom_penh', name: 'Phnom Penh', countryCode: 'KH', country: 'Cambodia', timeZoneName: 'Asia/Phnom_Penh', flagEmoji: '🇰🇭'),
+      
+      // === SPECIAL TERRITORIES (Very High Market Share) ===
+      City(id: 'hamilton', name: 'Hamilton', countryCode: 'BM', country: 'Bermuda', timeZoneName: 'Atlantic/Bermuda', flagEmoji: '🇧🇲'),
+      City(id: 'nassau', name: 'Nassau', countryCode: 'BS', country: 'Bahamas', timeZoneName: 'America/Nassau', flagEmoji: '🇧🇸'),
+      City(id: 'torshavn', name: 'Tórshavn', countryCode: 'FO', country: 'Faroe Islands', timeZoneName: 'Atlantic/Faroe', flagEmoji: '🇫🇴'),
+      City(id: 'san_marino', name: 'San Marino', countryCode: 'SM', country: 'San Marino', timeZoneName: 'Europe/San_Marino', flagEmoji: '🇸🇲'),
+      City(id: 'andorra_la_vella', name: 'Andorra la Vella', countryCode: 'AD', country: 'Andorra', timeZoneName: 'Europe/Andorra', flagEmoji: '🇦🇩'),
+      
+      // === SOUTH AMERICA ===
+      City(id: 'sao_paulo', name: 'São Paulo', countryCode: 'BR', country: 'Brazil', timeZoneName: 'America/Sao_Paulo', flagEmoji: '🇧🇷'),
+      City(id: 'brasilia', name: 'Brasília', countryCode: 'BR', country: 'Brazil', timeZoneName: 'America/Sao_Paulo', flagEmoji: '🇧🇷'),
+      
+      // === OTHER ASIA ===
+      City(id: 'moscow', name: 'Moscow', countryCode: 'RU', country: 'Russia', timeZoneName: 'Europe/Moscow', flagEmoji: '🇷🇺'),
       City(id: 'ho_chi_minh', name: 'Ho Chi Minh', countryCode: 'VN', country: 'Vietnam', timeZoneName: 'Asia/Ho_Chi_Minh', flagEmoji: '🇻🇳'),
       City(id: 'jakarta', name: 'Jakarta', countryCode: 'ID', country: 'Indonesia', timeZoneName: 'Asia/Jakarta', flagEmoji: '🇮🇩'),
       City(id: 'manila', name: 'Manila', countryCode: 'PH', country: 'Philippines', timeZoneName: 'Asia/Manila', flagEmoji: '🇵🇭'),
-      City(id: 'sao_paulo', name: 'São Paulo', countryCode: 'BR', country: 'Brazil', timeZoneName: 'America/Sao_Paulo', flagEmoji: '🇧🇷'),
+      City(id: 'kuala_lumpur', name: 'Kuala Lumpur', countryCode: 'MY', country: 'Malaysia', timeZoneName: 'Asia/Kuala_Lumpur', flagEmoji: '🇲🇾'),
+      City(id: 'belmopan', name: 'Belmopan', countryCode: 'BZ', country: 'Belize', timeZoneName: 'America/Belize', flagEmoji: '🇧🇿'),
     ];
   }
 

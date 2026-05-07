@@ -28,7 +28,9 @@ class _CityPickerDialogState extends State<CityPickerDialog> {
         .where((c) {
           if (_query.isEmpty) return true;
           final q = _query.toLowerCase();
+          // Search by city name, country name, or country code
           return c.name.toLowerCase().contains(q) ||
+              c.country.toLowerCase().contains(q) ||
               c.countryCode.toLowerCase().contains(q);
         })
         .toList();
@@ -95,7 +97,7 @@ class _CityPickerDialogState extends State<CityPickerDialog> {
                             style: const TextStyle(fontSize: 24),
                           ),
                           title: Text(city.name),
-                          subtitle: Text(city.timeZoneName),
+                          subtitle: Text('${city.country} • ${city.timeZoneName}'),
                           trailing: Text(
                             _formatOffset(city),
                             style: Theme.of(context).textTheme.labelSmall,

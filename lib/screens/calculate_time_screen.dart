@@ -16,6 +16,20 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
   DateTime? _selectedTime;
   String? _referenceCityId;
 
+  @override
+  void initState() {
+    super.initState();
+    // Reset to current time on app start - requirement 8
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _selectedTime = null;
+          _referenceCityId = null;
+        });
+      }
+    });
+  }
+
   Future<void> _pickTime(BuildContext context, String cityId) async {
     final appState = context.read<AppState>();
     final city = appState.allCities.firstWhere((c) => c.id == cityId);
@@ -84,7 +98,7 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calculate Time'),
+        title: const Text('Convert Timezone'),
         actions: [
           if (_selectedTime != null)
             TextButton.icon(
@@ -146,10 +160,10 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddCityDialog(context),
-        icon: const Icon(Icons.add),
-        label: const Text('Add City'),
+        tooltip: 'Add City',
+        child: const Icon(Icons.add),
       ),
     );
   }

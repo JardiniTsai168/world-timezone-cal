@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'models/app_state.dart';
 import 'services/timezone_service.dart';
 import 'screens/calculate_time_screen.dart';
-import 'screens/current_time_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() {
@@ -220,13 +219,13 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    final selectedIndex = appState.currentTabIndex;
+    // Clamp index to valid range (0-1 for 2 tabs)
+    final selectedIndex = appState.currentTabIndex.clamp(0, 1);
 
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
         children: const [
-          CurrentTimeScreen(),
           CalculateTimeScreen(),
           SettingsScreen(),
         ],
@@ -236,15 +235,13 @@ class MainScreen extends StatelessWidget {
         onDestinationSelected: appState.setTabIndex,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.access_time),
-            label: 'Current',
+            icon: Icon(Icons.calculate_outlined),
+            selectedIcon: Icon(Icons.calculate),
+            label: 'Convert Timezone',
           ),
           NavigationDestination(
-            icon: Icon(Icons.calculate),
-            label: 'Calculate',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],

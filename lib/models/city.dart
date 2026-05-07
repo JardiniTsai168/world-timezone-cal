@@ -4,6 +4,7 @@ class City {
   final String id;
   final String name;
   final String countryCode;
+  final String country; // Added country name for search
   final String timeZoneName;
   final String flagEmoji;
   final double? latitude;
@@ -13,6 +14,7 @@ class City {
     required this.id,
     required this.name,
     required this.countryCode,
+    required this.country,
     required this.timeZoneName,
     required this.flagEmoji,
     this.latitude,
@@ -78,28 +80,28 @@ class City {
 
   static List<City> getPredefinedCities() {
     return [
-      City(id: 'taipei', name: 'Taipei', countryCode: 'TW', timeZoneName: 'Asia/Taipei', flagEmoji: '🇹🇼'),
-      City(id: 'tokyo', name: 'Tokyo', countryCode: 'JP', timeZoneName: 'Asia/Tokyo', flagEmoji: '🇯🇵'),
-      City(id: 'seoul', name: 'Seoul', countryCode: 'KR', timeZoneName: 'Asia/Seoul', flagEmoji: '🇰🇷'),
-      City(id: 'beijing', name: 'Beijing', countryCode: 'CN', timeZoneName: 'Asia/Shanghai', flagEmoji: '🇨🇳'),
-      City(id: 'singapore', name: 'Singapore', countryCode: 'SG', timeZoneName: 'Asia/Singapore', flagEmoji: '🇸🇬'),
-      City(id: 'sydney', name: 'Sydney', countryCode: 'AU', timeZoneName: 'Australia/Sydney', flagEmoji: '🇦🇺'),
-      City(id: 'london', name: 'London', countryCode: 'GB', timeZoneName: 'Europe/London', flagEmoji: '🇬🇧'),
-      City(id: 'paris', name: 'Paris', countryCode: 'FR', timeZoneName: 'Europe/Paris', flagEmoji: '🇫🇷'),
-      City(id: 'berlin', name: 'Berlin', countryCode: 'DE', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
-      City(id: 'rome', name: 'Rome', countryCode: 'IT', timeZoneName: 'Europe/Rome', flagEmoji: '🇮🇹'),
-      City(id: 'moscow', name: 'Moscow', countryCode: 'RU', timeZoneName: 'Europe/Moscow', flagEmoji: '🇷🇺'),
-      City(id: 'new_york', name: 'New York', countryCode: 'US', timeZoneName: 'America/New_York', flagEmoji: '🇺🇸'),
-      City(id: 'los_angeles', name: 'Los Angeles', countryCode: 'US', timeZoneName: 'America/Los_Angeles', flagEmoji: '🇺🇸'),
-      City(id: 'chicago', name: 'Chicago', countryCode: 'US', timeZoneName: 'America/Chicago', flagEmoji: '🇺🇸'),
-      City(id: 'dubai', name: 'Dubai', countryCode: 'AE', timeZoneName: 'Asia/Dubai', flagEmoji: '🇦🇪'),
-      City(id: 'mumbai', name: 'Mumbai', countryCode: 'IN', timeZoneName: 'Asia/Kolkata', flagEmoji: '🇮🇳'),
-      City(id: 'hong_kong', name: 'Hong Kong', countryCode: 'HK', timeZoneName: 'Asia/Hong_Kong', flagEmoji: '🇭🇰'),
-      City(id: 'bangkok', name: 'Bangkok', countryCode: 'TH', timeZoneName: 'Asia/Bangkok', flagEmoji: '🇹🇭'),
-      City(id: 'ho_chi_minh', name: 'Ho Chi Minh', countryCode: 'VN', timeZoneName: 'Asia/Ho_Chi_Minh', flagEmoji: '🇻🇳'),
-      City(id: 'jakarta', name: 'Jakarta', countryCode: 'ID', timeZoneName: 'Asia/Jakarta', flagEmoji: '🇮🇩'),
-      City(id: 'manila', name: 'Manila', countryCode: 'PH', timeZoneName: 'Asia/Manila', flagEmoji: '🇵🇭'),
-      City(id: 'sao_paulo', name: 'São Paulo', countryCode: 'BR', timeZoneName: 'America/Sao_Paulo', flagEmoji: '🇧🇷'),
+      City(id: 'taipei', name: 'Taipei', countryCode: 'TW', country: 'Taiwan', timeZoneName: 'Asia/Taipei', flagEmoji: '🇹🇼'),
+      City(id: 'tokyo', name: 'Tokyo', countryCode: 'JP', country: 'Japan', timeZoneName: 'Asia/Tokyo', flagEmoji: '🇯🇵'),
+      City(id: 'seoul', name: 'Seoul', countryCode: 'KR', country: 'South Korea', timeZoneName: 'Asia/Seoul', flagEmoji: '🇰🇷'),
+      City(id: 'beijing', name: 'Beijing', countryCode: 'CN', country: 'China', timeZoneName: 'Asia/Shanghai', flagEmoji: '🇨🇳'),
+      City(id: 'singapore', name: 'Singapore', countryCode: 'SG', country: 'Singapore', timeZoneName: 'Asia/Singapore', flagEmoji: '🇸🇬'),
+      City(id: 'sydney', name: 'Sydney', countryCode: 'AU', country: 'Australia', timeZoneName: 'Australia/Sydney', flagEmoji: '🇦🇺'),
+      City(id: 'london', name: 'London', countryCode: 'GB', country: 'United Kingdom', timeZoneName: 'Europe/London', flagEmoji: '🇬🇧'),
+      City(id: 'paris', name: 'Paris', countryCode: 'FR', country: 'France', timeZoneName: 'Europe/Paris', flagEmoji: '🇫🇷'),
+      City(id: 'berlin', name: 'Berlin', countryCode: 'DE', country: 'Germany', timeZoneName: 'Europe/Berlin', flagEmoji: '🇩🇪'),
+      City(id: 'rome', name: 'Rome', countryCode: 'IT', country: 'Italy', timeZoneName: 'Europe/Rome', flagEmoji: '🇮🇹'),
+      City(id: 'moscow', name: 'Moscow', countryCode: 'RU', country: 'Russia', timeZoneName: 'Europe/Moscow', flagEmoji: '🇷🇺'),
+      City(id: 'new_york', name: 'New York', countryCode: 'US', country: 'United States', timeZoneName: 'America/New_York', flagEmoji: '🇺🇸'),
+      City(id: 'los_angeles', name: 'Los Angeles', countryCode: 'US', country: 'United States', timeZoneName: 'America/Los_Angeles', flagEmoji: '🇺🇸'),
+      City(id: 'chicago', name: 'Chicago', countryCode: 'US', country: 'United States', timeZoneName: 'America/Chicago', flagEmoji: '🇺🇸'),
+      City(id: 'dubai', name: 'Dubai', countryCode: 'AE', country: 'United Arab Emirates', timeZoneName: 'Asia/Dubai', flagEmoji: '🇦🇪'),
+      City(id: 'mumbai', name: 'Mumbai', countryCode: 'IN', country: 'India', timeZoneName: 'Asia/Kolkata', flagEmoji: '🇮🇳'),
+      City(id: 'hong_kong', name: 'Hong Kong', countryCode: 'HK', country: 'Hong Kong', timeZoneName: 'Asia/Hong_Kong', flagEmoji: '🇭🇰'),
+      City(id: 'bangkok', name: 'Bangkok', countryCode: 'TH', country: 'Thailand', timeZoneName: 'Asia/Bangkok', flagEmoji: '🇹🇭'),
+      City(id: 'ho_chi_minh', name: 'Ho Chi Minh', countryCode: 'VN', country: 'Vietnam', timeZoneName: 'Asia/Ho_Chi_Minh', flagEmoji: '🇻🇳'),
+      City(id: 'jakarta', name: 'Jakarta', countryCode: 'ID', country: 'Indonesia', timeZoneName: 'Asia/Jakarta', flagEmoji: '🇮🇩'),
+      City(id: 'manila', name: 'Manila', countryCode: 'PH', country: 'Philippines', timeZoneName: 'Asia/Manila', flagEmoji: '🇵🇭'),
+      City(id: 'sao_paulo', name: 'São Paulo', countryCode: 'BR', country: 'Brazil', timeZoneName: 'America/Sao_Paulo', flagEmoji: '🇧🇷'),
     ];
   }
 

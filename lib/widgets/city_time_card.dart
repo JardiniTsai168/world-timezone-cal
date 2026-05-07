@@ -59,13 +59,25 @@ class CityTimeCard extends StatelessWidget {
                   children: [
                     Text(
                       city.name,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _formatDate(time),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black87,
                           ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${_formatDate(time)}  $tzAbbr${isDst ? ' (DST)' : ''}',
+                      '$tzAbbr${isDst ? ' (DST)' : ''}',
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ],
@@ -90,23 +102,13 @@ class CityTimeCard extends StatelessWidget {
                       Text(
                         _formatTime(time, is24Hour),
                         style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                              fontSize: 22,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
                       ),
                     ],
                   ),
-                  if (displayTime == null)
-                    Text(
-                      'Live',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: const Color(0xFF10B981),
-                          ),
-                    )
-                  else
-                    Text(
-                      'Calculated',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
+                  // Removed "Calculated" / "Live" text
                 ],
               ),
               if (onDelete != null)

@@ -12,6 +12,7 @@ class AppState extends ChangeNotifier {
   int _currentTabIndex = 0;
   bool _is24HourFormat = true;
   bool _isDarkMode = false;
+  DateTime? _selectedTime; // For calculate time
 
   bool _initialized = false;
   bool get initialized => _initialized;
@@ -56,6 +57,7 @@ class AppState extends ChangeNotifier {
   int get currentTabIndex => _currentTabIndex;
   bool get is24HourFormat => _is24HourFormat;
   bool get isDarkMode => _isDarkMode;
+  DateTime? get selectedTime => _selectedTime;
 
   City? get selectedCity => _selectedCities.isNotEmpty ? _selectedCities.first : null;
 
@@ -121,5 +123,16 @@ class AppState extends ChangeNotifier {
       _prefs?.setDarkMode(value);
       notifyListeners();
     }
+  }
+
+  // Time selection for calculate
+  void setSelectedTime(DateTime? time) {
+    _selectedTime = time;
+    notifyListeners();
+  }
+
+  void resetSelectedTime() {
+    _selectedTime = null;
+    notifyListeners();
   }
 }

@@ -103,7 +103,10 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Convert Timezone'),
+        title: const Text(
+          'Convert Timezone',
+          style: TextStyle(fontSize: 16),
+        ),
         leading: _selectedTime != null
             ? TextButton(
                 onPressed: _reset,
@@ -113,7 +116,7 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
         actions: [
           Consumer<AppState>(
             builder: (context, appState, child) {
-              if (appState.selectedCities.isEmpty) return const SizedBox.shrink();
+              if (appState.selectedCities.isEmpty && !_isEditMode) return const SizedBox.shrink();
               return TextButton(
                 onPressed: _toggleEditMode,
                 child: Text(_isEditMode ? 'Done' : 'Edit'),
@@ -125,10 +128,6 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
       body: Consumer<AppState>(
         builder: (context, appState, child) {
           final cities = appState.selectedCities;
-
-          if (cities.isEmpty) {
-            return const Center(child: Text('No cities selected'));
-          }
 
           final allCities = appState.allCities;
           final refCity = _referenceCityId != null
@@ -153,75 +152,69 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                     ],
                   ),
                 ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 8, bottom: 80),
-                  itemCount: _isEditMode ? cities.length + 1 : cities.length,
-                  itemBuilder: (_, i) {
-                    if (_isEditMode && i == cities.length) {
-                      // ⊕ Add a Location
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                        child: InkWell(
-                          onTap: () => _showAddCityDialog(context),
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.outline,
+              if (cities.isEmpty && !_isEditMode)
+                const Expanded(
+                  child: Center(child: Text('No cities selected')),
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(top: 8, bottom: 80),
+                    itemCount: _isEditMode ? cities.length + 1 : cities.length,
+                    itemBuilder: (_, i) {
+                      if (_isEditMode && i == cities.length) {
+                        // ⊕ Add a location
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          child: InkWell(
+                            onTap: () => _showAddCityDialog(context),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.add_circle_outline,
+                                    color: Color(0xFFEF4444),
+                                    size: 28,
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    'Add a location',
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: const Color(0xFFEF4444),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.add_circle_outline,
-                                  color: Color(0xFFEF4444),
-                                  size: 28,
-                                ),
-                                const SizedBox(width: 16),
-                                Text(
-                                  'Add a Location',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: const Color(0xFFEF4444),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                      );
-                    }
+                        );
+                      }
 
-                    final city = cities[i];
-                    return CityTimeCard(
-                      key: ValueKey('calc_${city.id}'),
-                      city: city,
-                      displayTime: _getDisplayTime(city.id, allCities),
-                      is24Hour: appState.is24HourFormat,
-                      showLiveIndicator: _selectedTime == null,
-                      isEditing: _isEditMode,
-                      onTap: _isEditMode ? null : () => _pickTime(context, city.id),
-                      onDelete: _isEditMode
-                          ? () {
-                              appState.removeCity(city);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${city.flagEmoji} ${city.name} removed'),
-                                  action: SnackBarAction(
-                                    label: 'Undo',
-                                    onPressed: () => appState.addCity(city),
-                                  ),
-                                ),
-                              );
-                            }
-                          : null,
-                    );
-                  },
+                      final city = cities[i];
+                      return CityTimeCard(
+                        key: ValueKey('calc_${city.id}'),
+                        city: city,
+                        displayTime: _getDisplayTime(city.id, allCities),
+                        is24Hour: appState.is24HourFormat,
+                        showLiveIndicator: _selectedTime == null,
+                        isEditing: _isEditMode,
+                        onTap: _isEditMode ? null : () => _pickTime(context, city.id),
+                        onDelete: _isEditMode
+                            ? () => appState.removeCity(city)
+                            : null,
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           );
         },

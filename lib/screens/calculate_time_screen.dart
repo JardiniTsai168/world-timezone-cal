@@ -155,42 +155,35 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                 )
               else
                 Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(top: 0, bottom: 80),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.only(bottom: 80),
                     itemCount: _isEditMode ? cities.length + 1 : cities.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
                     itemBuilder: (_, i) {
                       if (_isEditMode && i == cities.length) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                          child: InkWell(
-                            onTap: () => _showAddCityDialog(context),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                    color: Theme.of(context).colorScheme.outline,
+                        return InkWell(
+                          onTap: () => _showAddCityDialog(context),
+                          child: Container(
+                            height: 48,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.add_circle_outline,
+                                  color: Color(0xFFEF4444),
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Add a location',
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: const Color(0xFFEF4444),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
                                   ),
                                 ),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.add_circle_outline,
-                                    color: Color(0xFFEF4444),
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Add a location',
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: const Color(0xFFEF4444),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
                           ),
                         );

@@ -130,6 +130,8 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
           final refCity = _referenceCityId != null
               ? allCities.firstWhere((c) => c.id == _referenceCityId)
               : null;
+          final inEditWithAdd = _isEditMode;
+          final cityCount = cities.length;
 
           return Column(
             children: [
@@ -155,12 +157,12 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                 )
               else
                 Expanded(
-                  child: ListView.separated(
+                  child: ListView.builder(
                     padding: const EdgeInsets.only(bottom: 80),
-                    itemCount: _isEditMode ? cities.length + 1 : cities.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemCount: inEditWithAdd ? cityCount + 1 : cityCount,
                     itemBuilder: (_, i) {
-                      if (_isEditMode && i == cities.length) {
+                      if (inEditWithAdd && i == cityCount) {
+                        // Add a location row — no top border
                         return InkWell(
                           onTap: () => _showAddCityDialog(context),
                           child: Container(
@@ -189,18 +191,29 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                         );
                       }
 
+                      final isLastCityBeforeAdd = inEditWithAdd && i == cityCount - 1;
                       final city = cities[i];
-                      return CityTimeCard(
-                        key: ValueKey('calc_${city.id}'),
-                        city: city,
-                        displayTime: _getDisplayTime(city.id, allCities),
-                        is24Hour: appState.is24HourFormat,
-                        showLiveIndicator: _selectedTime == null,
-                        isEditing: _isEditMode,
-                        onTap: _isEditMode ? null : () => _pickTime(context, city.id),
-                        onDelete: _isEditMode
-                            ? () => appState.removeCity(city)
-                            : null,
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: isLastCityBeforeAdd
+                                ? BorderSide.none
+                                : const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+                          ),
+                        ),
+                        child: CityTimeCard(
+                          key: ValueKey('calc_${city.id}'),
+                          city: city,
+                          displayTime: _getDisplayTime(city.id, allCities),
+                          is24Hour: appState.is24HourFormat,
+                          showLiveIndicator: _selectedTime == null,
+                          showArrow: _selectedTime != null,
+                          isEditing: _isEditMode,
+                          onTap: _isEditMode ? null : () => _pickTime(context, city.id),
+                          onDelete: _isEditMode
+                              ? () => appState.removeCity(city)
+                              : null,
+                        ),
                       );
                     },
                   ),

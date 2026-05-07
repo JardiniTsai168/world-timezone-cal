@@ -86,6 +86,7 @@ class CityTimeCard extends StatelessWidget {
                             fontSize: 13,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                 ],
               ),

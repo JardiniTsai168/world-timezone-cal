@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 import '../services/timezone_service.dart';
 import '../widgets/city_time_card.dart';
-import '../widgets/city_picker_dialog.dart';
-
 class CalculateTimeScreen extends StatefulWidget {
   const CalculateTimeScreen({super.key});
 
@@ -82,31 +80,17 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
     return TimezoneService().getCurrentTime(city);
   }
 
-  void _showAddCityDialog(BuildContext context) {
-    final appState = context.read<AppState>();
-    showDialog(
-      context: context,
-      builder: (ctx) => CityPickerDialog(
-        allCities: appState.allCities.toList(),
-        excludedCities: appState.selectedCities.toList(),
-        onSelected: appState.addCity,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Convert Timezone'),
-        actions: [
-          if (_selectedTime != null)
-            TextButton.icon(
-              onPressed: _reset,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Reset'),
-            ),
-        ],
+        leading: _selectedTime != null
+            ? TextButton(
+                onPressed: _reset,
+                child: const Text('Reset'),
+              )
+            : null,
       ),
       body: Consumer<AppState>(
         builder: (context, appState, child) {
@@ -202,18 +186,6 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                         is24Hour: appState.is24HourFormat,
                         showLiveIndicator: _selectedTime == null,
                         onTap: () => _pickTime(context, city.id),
-                        onDelete: () {
-                          appState.removeCity(city);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${city.flagEmoji} ${city.name} removed'),
-                              action: SnackBarAction(
-                                label: 'Undo',
-                                onPressed: () => appState.addCity(city),
-                              ),
-                            ),
-                          );
-                        },
                       ),
                     );
                   },
@@ -222,11 +194,6 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
             ],
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddCityDialog(context),
-        tooltip: 'Add City',
-        child: const Icon(Icons.add),
       ),
     );
   }

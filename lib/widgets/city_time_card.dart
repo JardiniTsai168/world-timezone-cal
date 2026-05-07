@@ -8,6 +8,7 @@ class CityTimeCard extends StatelessWidget {
   final DateTime? displayTime;
   final bool showLiveIndicator;
   final bool is24Hour;
+  final bool showArrow;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
 
@@ -17,6 +18,7 @@ class CityTimeCard extends StatelessWidget {
     this.displayTime,
     this.showLiveIndicator = true,
     this.is24Hour = true,
+    this.showArrow = true,
     this.onTap,
     this.onDelete,
   });
@@ -106,6 +108,15 @@ class CityTimeCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                       ),
+                      if (showArrow)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Icon(
+                            Icons.chevron_right,
+                            size: 20,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ),
                     ],
                   ),
                   if (showLiveIndicator)

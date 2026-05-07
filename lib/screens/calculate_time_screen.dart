@@ -145,13 +145,76 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                   itemCount: cities.length,
                   itemBuilder: (_, i) {
                     final city = cities[i];
-                    return CityTimeCard(
-                      key: ValueKey('calc_${city.id}'),
-                      city: city,
-                      displayTime: _getDisplayTime(city.id, allCities),
-                      is24Hour: appState.is24HourFormat,
-                      showLiveIndicator: _selectedTime == null,
-                      onTap: () => _pickTime(context, city.id),
+                    return Dismissible(
+                      key: Key('city_${city.id}'),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEF4444),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Remove City'),
+                            content: Text('Remove ${city.flagEmoji} ${city.name}?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, true),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: const Color(0xFFEF4444),
+                                ),
+                                child: const Text('Remove'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onDismissed: (direction) {
+                        appState.removeCity(city);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${city.flagEmoji} ${city.name} removed'),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () => appState.addCity(city),
+                            ),
+                          ),
+                        );
+                      },
+                      child: CityTimeCard(
+                        key: ValueKey('calc_${city.id}'),
+                        city: city,
+                        displayTime: _getDisplayTime(city.id, allCities),
+                        is24Hour: appState.is24HourFormat,
+                        showLiveIndicator: _selectedTime == null,
+                        onTap: () => _pickTime(context, city.id),
+                        onDelete: () {
+                          appState.removeCity(city);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${city.flagEmoji} ${city.name} removed'),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                onPressed: () => appState.addCity(city),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

@@ -44,12 +44,12 @@ class CityTimeCard extends StatelessWidget {
     final tzAbbr = tzService.getTimeZoneAbbreviation(city);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      shape: const RoundedRectangleBorder(),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
             children: [
               if (isEditing)
@@ -60,15 +60,15 @@ class CityTimeCard extends StatelessWidget {
                     child: const Icon(
                       Icons.remove_circle_outline,
                       color: Color(0xFFEF4444),
-                      size: 28,
+                      size: 24,
                     ),
                   ),
                 ),
               Text(
                 city.flagEmoji,
-                style: const TextStyle(fontSize: 32),
+                style: const TextStyle(fontSize: 28),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,76 +77,51 @@ class CityTimeCard extends StatelessWidget {
                       city.name,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: 16,
                           ),
                     ),
                     if (!isEditing) ...[
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 1),
                       Text(
-                        _formatDate(time),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black87,
+                        '${_formatDate(time)}  $tzAbbr${isDst ? ' (DST)' : ''}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 13,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '$tzAbbr${isDst ? ' (DST)' : ''}',
-                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ],
                   ],
                 ),
               ),
               if (!isEditing)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (showLiveIndicator)
-                          Container(
-                            width: 8,
-                            height: 8,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF10B981),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        Text(
-                          _formatTime(time, is24Hour),
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        if (showArrow)
-                          const Padding(
-                            padding: EdgeInsets.only(left: 4),
-                            child: Icon(
-                              Icons.chevron_right,
-                              size: 20,
-                              color: Color(0xFF9CA3AF),
-                            ),
-                          ),
-                      ],
-                    ),
                     if (showLiveIndicator)
-                      Text(
-                        'Live',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: const Color(0xFF10B981),
-                            ),
-                      )
-                    else
-                      Text(
-                        'Calculated',
-                        style: Theme.of(context).textTheme.labelSmall,
+                      Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.only(right: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                    Text(
+                      _formatTime(time, is24Hour),
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    if (showArrow)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4),
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 18,
+                          color: Color(0xFF9CA3AF),
+                        ),
                       ),
                   ],
                 ),

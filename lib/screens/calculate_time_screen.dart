@@ -20,7 +20,6 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
   @override
   void initState() {
     super.initState();
-    // Reset to current time on app start - requirement 8
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
@@ -43,15 +42,12 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    // ignore: use_build_context_synchronously
     if (date == null || !mounted) return;
 
     final time = await showTimePicker(
-      // ignore: use_build_context_synchronously
       context: context,
       initialTime: TimeOfDay.fromDateTime(now),
     );
-    // ignore: use_build_context_synchronously
     if (time == null || !mounted) return;
 
     final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
@@ -107,10 +103,12 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
           'Convert Timezone',
           style: TextStyle(fontSize: 16),
         ),
+        leadingWidth: 80,
         leading: _selectedTime != null
             ? TextButton(
                 onPressed: _reset,
-                child: const Text('Reset'),
+                style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                child: const Text('Reset', style: TextStyle(fontSize: 14)),
               )
             : null,
         actions: [
@@ -128,7 +126,6 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
       body: Consumer<AppState>(
         builder: (context, appState, child) {
           final cities = appState.selectedCities;
-
           final allCities = appState.allCities;
           final refCity = _referenceCityId != null
               ? allCities.firstWhere((c) => c.id == _referenceCityId)
@@ -159,22 +156,21 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
               else
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.only(top: 8, bottom: 80),
+                    padding: const EdgeInsets.only(top: 0, bottom: 80),
                     itemCount: _isEditMode ? cities.length + 1 : cities.length,
                     itemBuilder: (_, i) {
                       if (_isEditMode && i == cities.length) {
-                        // ⊕ Add a location
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           child: InkWell(
                             onTap: () => _showAddCityDialog(context),
-                            borderRadius: BorderRadius.circular(16),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline,
+                                border: Border(
+                                  top: BorderSide(
+                                    color: Theme.of(context).colorScheme.outline,
+                                  ),
                                 ),
                               ),
                               child: Row(
@@ -182,14 +178,15 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                                   const Icon(
                                     Icons.add_circle_outline,
                                     color: Color(0xFFEF4444),
-                                    size: 28,
+                                    size: 24,
                                   ),
-                                  const SizedBox(width: 16),
+                                  const SizedBox(width: 12),
                                   Text(
                                     'Add a location',
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: const Color(0xFFEF4444),
                                       fontWeight: FontWeight.w600,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ],

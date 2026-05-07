@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 import '../services/timezone_service.dart';
 import '../widgets/city_time_card.dart';
+import '../widgets/city_picker_dialog.dart';
+
 class CalculateTimeScreen extends StatefulWidget {
   const CalculateTimeScreen({super.key});
 
@@ -13,6 +15,7 @@ class CalculateTimeScreen extends StatefulWidget {
 class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
   DateTime? _selectedTime;
   String? _referenceCityId;
+  bool _isEditMode = false;
 
   @override
   void initState() {
@@ -66,6 +69,22 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
     });
   }
 
+  void _toggleEditMode() {
+    setState(() => _isEditMode = !_isEditMode);
+  }
+
+  void _showAddCityDialog(BuildContext context) {
+    final appState = context.read<AppState>();
+    showDialog(
+      context: context,
+      builder: (ctx) => CityPickerDialog(
+        allCities: appState.allCities.toList(),
+        excludedCities: appState.selectedCities.toList(),
+        onSelected: appState.addCity,
+      ),
+    );
+  }
+
   DateTime _getDisplayTime(String cityId, List<dynamic> allCities) {
     if (_selectedTime != null && _referenceCityId != null) {
       final refCity = allCities.firstWhere((c) => c.id == _referenceCityId);
@@ -91,6 +110,17 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                 child: const Text('Reset'),
               )
             : null,
+        actions: [
+          Consumer<AppState>(
+            builder: (context, appState, child) {
+              if (appState.selectedCities.isEmpty) return const SizedBox.shrink();
+              return TextButton(
+                onPressed: _toggleEditMode,
+                child: Text(_isEditMode ? 'Done' : 'Edit'),
+              );
+            },
+          ),
+        ],
       ),
       body: Consumer<AppState>(
         builder: (context, appState, child) {
@@ -126,67 +156,68 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(top: 8, bottom: 80),
-                  itemCount: cities.length,
+                  itemCount: _isEditMode ? cities.length + 1 : cities.length,
                   itemBuilder: (_, i) {
-                    final city = cities[i];
-                    return Dismissible(
-                      key: Key('city_${city.id}'),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ),
-                      confirmDismiss: (direction) async {
-                        return await showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: const Text('Remove City'),
-                            content: Text('Remove ${city.flagEmoji} ${city.name}?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Cancel'),
+                    if (_isEditMode && i == cities.length) {
+                      // ⊕ Add a Location
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        child: InkWell(
+                          onTap: () => _showAddCityDialog(context),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline,
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx, true),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: const Color(0xFFEF4444),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.add_circle_outline,
+                                  color: Color(0xFFEF4444),
+                                  size: 28,
                                 ),
-                                child: const Text('Remove'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      onDismissed: (direction) {
-                        appState.removeCity(city);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${city.flagEmoji} ${city.name} removed'),
-                            action: SnackBarAction(
-                              label: 'Undo',
-                              onPressed: () => appState.addCity(city),
+                                const SizedBox(width: 16),
+                                Text(
+                                  'Add a Location',
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: const Color(0xFFEF4444),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                      child: CityTimeCard(
-                        key: ValueKey('calc_${city.id}'),
-                        city: city,
-                        displayTime: _getDisplayTime(city.id, allCities),
-                        is24Hour: appState.is24HourFormat,
-                        showLiveIndicator: _selectedTime == null,
-                        onTap: () => _pickTime(context, city.id),
-                      ),
+                        ),
+                      );
+                    }
+
+                    final city = cities[i];
+                    return CityTimeCard(
+                      key: ValueKey('calc_${city.id}'),
+                      city: city,
+                      displayTime: _getDisplayTime(city.id, allCities),
+                      is24Hour: appState.is24HourFormat,
+                      showLiveIndicator: _selectedTime == null,
+                      isEditing: _isEditMode,
+                      onTap: _isEditMode ? null : () => _pickTime(context, city.id),
+                      onDelete: _isEditMode
+                          ? () {
+                              appState.removeCity(city);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${city.flagEmoji} ${city.name} removed'),
+                                  action: SnackBarAction(
+                                    label: 'Undo',
+                                    onPressed: () => appState.addCity(city),
+                                  ),
+                                ),
+                              );
+                            }
+                          : null,
                     );
                   },
                 ),

@@ -9,6 +9,7 @@ class CityTimeCard extends StatelessWidget {
   final bool showLiveIndicator;
   final bool is24Hour;
   final bool showArrow;
+  final bool isEditing;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
 
@@ -19,6 +20,7 @@ class CityTimeCard extends StatelessWidget {
     this.showLiveIndicator = true,
     this.is24Hour = true,
     this.showArrow = true,
+    this.isEditing = false,
     this.onTap,
     this.onDelete,
   });
@@ -50,6 +52,18 @@ class CityTimeCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
             children: [
+              if (isEditing)
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                    onTap: onDelete,
+                    child: const Icon(
+                      Icons.remove_circle_outline,
+                      color: Color(0xFFEF4444),
+                      size: 28,
+                    ),
+                  ),
+                ),
               Text(
                 city.flagEmoji,
                 style: const TextStyle(fontSize: 32),
@@ -66,74 +80,77 @@ class CityTimeCard extends StatelessWidget {
                             fontSize: 18,
                           ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _formatDate(time),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black87,
-                          ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '$tzAbbr${isDst ? ' (DST)' : ''}',
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+                    if (!isEditing) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        _formatDate(time),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black87,
+                            ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '$tzAbbr${isDst ? ' (DST)' : ''}',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ],
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (showLiveIndicator)
-                        Container(
-                          width: 8,
-                          height: 8,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF10B981),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      Text(
-                        _formatTime(time, is24Hour),
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+              if (!isEditing)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (showLiveIndicator)
+                          Container(
+                            width: 8,
+                            height: 8,
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF10B981),
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                      ),
-                      if (showArrow)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 4),
-                          child: Icon(
-                            Icons.chevron_right,
-                            size: 20,
-                            color: Color(0xFF9CA3AF),
                           ),
+                        Text(
+                          _formatTime(time, is24Hour),
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
-                    ],
-                  ),
-                  if (showLiveIndicator)
-                    Text(
-                      'Live',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: const Color(0xFF10B981),
+                        if (showArrow)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Icon(
+                              Icons.chevron_right,
+                              size: 20,
+                              color: Color(0xFF9CA3AF),
+                            ),
                           ),
-                    )
-                  else
-                    Text(
-                      'Calculated',
-                      style: Theme.of(context).textTheme.labelSmall,
+                      ],
                     ),
-                ],
-              ),
-              if (onDelete != null)
+                    if (showLiveIndicator)
+                      Text(
+                        'Live',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: const Color(0xFF10B981),
+                            ),
+                      )
+                    else
+                      Text(
+                        'Calculated',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                  ],
+                ),
+              if (!isEditing && onDelete != null)
                 IconButton(
                   icon: const Icon(Icons.remove_circle_outline, color: Color(0xFFEF4444)),
                   onPressed: onDelete,

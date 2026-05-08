@@ -123,20 +123,15 @@ class CityTimeCard extends StatelessWidget {
                         ),
                   ),
                   if (showArrow)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
                       child: Icon(
-                        Icons.chevron_right,
-                        size: 18,
-                        color: Color(0xFF9CA3AF),
+                        Icons.chevron_right_rounded,
+                        size: 24,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                 ],
-              ),
-            if (!isEditing && onDelete != null)
-              IconButton(
-                icon: const Icon(Icons.remove_circle_outline, color: Color(0xFFEF4444)),
-                onPressed: onDelete,
               ),
           ],
         ),

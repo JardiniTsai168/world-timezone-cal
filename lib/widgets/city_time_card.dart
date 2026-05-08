@@ -124,11 +124,11 @@ class CityTimeCard extends StatelessWidget {
                   ),
                   if (showArrow)
                     Padding(
-                      padding: const EdgeInsets.only(left: 6),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Icon(
-                        Icons.chevron_right_rounded,
-                        size: 24,
-                        color: Theme.of(context).colorScheme.primary,
+                        Icons.chevron_right,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                 ],

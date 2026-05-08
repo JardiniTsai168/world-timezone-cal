@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/app_state.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -62,9 +63,33 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const Divider(height: 1, indent: 56),
                     ListTile(
-                      leading: const Icon(Icons.code),
-                      title: const Text('Built with Flutter'),
-                      onTap: () {},
+                      leading: const Icon(Icons.rocket_launch_outlined),
+                      title: RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          children: const [
+                            TextSpan(text: 'Built by '),
+                            TextSpan(
+                              text: 'lihi.io',
+                              style: TextStyle(
+                                color: Color(0xFF3B82F6),
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      subtitle: const Text(
+                        'Branded URL shortener at your service',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      onTap: () {
+                        launchUrl(
+                          Uri.parse('https://lihi.io'),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      },
                     ),
                   ],
                 ),

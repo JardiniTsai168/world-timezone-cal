@@ -78,8 +78,18 @@ class CityTimeCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  if (!isEditing)
+                  if (isEditing)
+                    Text(
+                      city.country,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 13,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  else
                     Text(
                       '${_formatDate(time)}  $tzAbbr${isDst ? ' (DST)' : ''}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -46,7 +46,7 @@ class CityTimeCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 48,
+        height: 56,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
@@ -105,22 +105,42 @@ class CityTimeCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (showLiveIndicator)
-                    Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.only(right: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981),
-                        borderRadius: BorderRadius.circular(3),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (showLiveIndicator)
+                            Container(
+                              width: 6,
+                              height: 6,
+                              margin: const EdgeInsets.only(right: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF10B981),
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                          Text(
+                            _formatTime(time, is24Hour),
+                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
                       ),
-                    ),
-                  Text(
-                    _formatTime(time, is24Hour),
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      if (showLiveIndicator)
+                        const Text(
+                          'current time',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF10B981),
+                          ),
                         ),
+                    ],
                   ),
                   if (showArrow)
                     Padding(

@@ -207,7 +207,7 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
                           displayTime: _getDisplayTime(city.id, allCities),
                           is24Hour: appState.is24HourFormat,
                           showLiveIndicator: _selectedTime == null,
-                          showArrow: _selectedTime != null,
+                          showArrow: true,
                           isEditing: _isEditMode,
                           onTap: _isEditMode ? null : () => _pickTime(context, city.id),
                           onDelete: _isEditMode

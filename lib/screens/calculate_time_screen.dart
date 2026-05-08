@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 import '../services/timezone_service.dart';
@@ -36,26 +37,86 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
     final tzService = TimezoneService();
     final now = tzService.getCurrentTime(city);
 
-    final date = await showDatePicker(
+    DateTime tempPicked = now;
+
+    final confirmed = await showModalBottomSheet<bool>(
       context: context,
-      initialDate: now,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, _) {
+            return SizedBox(
+              height: 320,
+              child: Column(
+                children: [
+                  // Top bar: Cancel / Done
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '${city.flagEmoji} ${city.name}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: Text(
+                            'Done',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(ctx).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  // Cupertino Date Picker
+                  Expanded(
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.dateAndTime,
+                      initialDateTime: now,
+                      minimumDate: DateTime(2024, 1, 1),
+                      maximumDate: DateTime(2030, 12, 31, 23, 59),
+                      use24hFormat: appState.is24HourFormat,
+                      onDateTimeChanged: (DateTime newDate) {
+                        tempPicked = newDate;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
-    if (date == null || !mounted) return;
 
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(now),
-    );
-    if (time == null || !mounted) return;
-
-    final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-
-    setState(() {
-      _selectedTime = picked;
-      _referenceCityId = cityId;
-    });
+    if (confirmed == true && mounted) {
+      setState(() {
+        _selectedTime = tempPicked;
+        _referenceCityId = cityId;
+      });
+    }
   }
 
   void _reset() {

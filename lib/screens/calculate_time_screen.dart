@@ -37,7 +37,52 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
     final tzService = TimezoneService();
     final now = tzService.getCurrentTime(city);
 
-    DateTime tempPicked = now;
+    // Initialize wheel values from current time
+    int selYear = now.year;
+    int selMonth = now.month;
+    int selDay = now.day;
+    int selHour = now.hour;
+    int selMinute = now.minute;
+
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    final years = List.generate(7, (i) => 2024 + i); // 2024-2030
+
+    int _daysInMonth(int year, int month) {
+      return DateTime(year, month + 1, 0).day;
+    }
+
+    Widget _buildWheel({
+      required int itemCount,
+      required int initialItem,
+      required String Function(int) labelBuilder,
+      required ValueChanged<int> onChanged,
+      required double width,
+    }) {
+      final controller = FixedExtentScrollController(initialItem: initialItem);
+      return SizedBox(
+        width: width,
+        child: ListWheelScrollView.useDelegate(
+          controller: controller,
+          itemExtent: 40,
+          perspective: 0.005,
+          diameterRatio: 1.2,
+          physics: const FixedExtentScrollPhysics(),
+          onSelectedItemChanged: onChanged,
+          childDelegate: ListWheelChildBuilderDelegate(
+            builder: (context, index) {
+              if (index < 0 || index >= itemCount) return null;
+              return Center(
+                child: Text(
+                  labelBuilder(index),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+              );
+            },
+            childCount: itemCount,
+          ),
+        ),
+      );
+    }
 
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
@@ -46,74 +91,141 @@ class _CalculateTimeScreenState extends State<CalculateTimeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, _) {
-            return SizedBox(
-              height: 320,
-              child: Column(
-                children: [
-                  // Top bar: Cancel / Done
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return SizedBox(
+          height: 320,
+          child: Column(
+            children: [
+              // Top bar: Cancel / City Name / Done
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${city.flagEmoji} ${city.name}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(ctx).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              // Custom wheels: Year | Month | Day | Hour | Min
+              Expanded(
+                child: Stack(
+                  children: [
+                    // Selection highlight bar
+                    Center(
+                      child: Container(
+                        height: 40,
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(ctx).colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    Row(
                       children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                            ),
+                        // Year wheel
+                        Expanded(
+                          flex: 2,
+                          child: _buildWheel(
+                            itemCount: years.length,
+                            initialItem: selYear - 2024,
+                            labelBuilder: (i) => '${years[i]}',
+                            onChanged: (i) => selYear = years[i],
+                            width: 70,
                           ),
                         ),
-                        Text(
-                          '${city.flagEmoji} ${city.name}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                        // Month wheel
+                        Expanded(
+                          flex: 2,
+                          child: _buildWheel(
+                            itemCount: 12,
+                            initialItem: selMonth - 1,
+                            labelBuilder: (i) => months[i],
+                            onChanged: (i) => selMonth = i + 1,
+                            width: 60,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          child: Text(
-                            'Done',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(ctx).colorScheme.primary,
-                            ),
+                        // Day wheel
+                        Expanded(
+                          flex: 2,
+                          child: _buildWheel(
+                            itemCount: _daysInMonth(selYear, selMonth),
+                            initialItem: selDay - 1,
+                            labelBuilder: (i) => '${i + 1}',
+                            onChanged: (i) => selDay = i + 1,
+                            width: 50,
+                          ),
+                        ),
+                        // Separator
+                        const SizedBox(width: 4),
+                        // Hour wheel
+                        Expanded(
+                          flex: 2,
+                          child: _buildWheel(
+                            itemCount: 24,
+                            initialItem: selHour,
+                            labelBuilder: (i) => i.toString().padLeft(2, '0'),
+                            onChanged: (i) => selHour = i,
+                            width: 50,
+                          ),
+                        ),
+                        // Colon
+                        const Text(':', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        // Minute wheel
+                        Expanded(
+                          flex: 2,
+                          child: _buildWheel(
+                            itemCount: 60,
+                            initialItem: selMinute,
+                            labelBuilder: (i) => i.toString().padLeft(2, '0'),
+                            onChanged: (i) => selMinute = i,
+                            width: 50,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const Divider(height: 1),
-                  // Cupertino Date Picker
-                  Expanded(
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.dateAndTime,
-                      initialDateTime: now,
-                      minimumDate: DateTime(2024, 1, 1),
-                      maximumDate: DateTime(2030, 12, 31, 23, 59),
-                      use24hFormat: appState.is24HourFormat,
-                      onDateTimeChanged: (DateTime newDate) {
-                        tempPicked = newDate;
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            );
-          },
+            ],
+          ),
         );
       },
     );
 
     if (confirmed == true && mounted) {
+      final maxDay = DateTime(selYear, selMonth + 1, 0).day;
+      if (selDay > maxDay) selDay = maxDay;
+      final picked = DateTime(selYear, selMonth, selDay, selHour, selMinute);
       setState(() {
-        _selectedTime = tempPicked;
+        _selectedTime = picked;
         _referenceCityId = cityId;
       });
     }

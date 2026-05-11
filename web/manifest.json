@@ -1,11 +1,11 @@
 {
-    "name": "world_timezone_cal",
-    "short_name": "world_timezone_cal",
+    "name": "World Timezone Calculator",
+    "short_name": "TimezoneCalc",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#ffffff",
+    "theme_color": "#007AFF",
+    "description": "Calculate times across global cities",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
